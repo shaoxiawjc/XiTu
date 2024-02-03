@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    url: jdbc:mysql://8.130.119.35:3306/xitu?useSSL=false&characterEncoding=UTF-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234567
+
+
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: flag # ????????????(since 3.3.0,????????????2)
+      logic-delete-value: 1 # ??????(??? 1)
+      logic-not-delete-value: 0 # ??????(??? 0)
+
+shiro:
+  credentialsMatcher:
+    hashAlgorithmName: SHA-256
+    hashIterations: 5
+
+
+
+logging:
+  pattern:
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
