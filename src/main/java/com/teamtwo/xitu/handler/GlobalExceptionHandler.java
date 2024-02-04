@@ -3,6 +3,7 @@ package com.teamtwo.xitu.handler;
 import com.alibaba.fastjson.JSON;
 import com.teamtwo.xitu.dto.CodeMessage;
 import com.teamtwo.xitu.dto.ResultResponse;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -40,10 +41,13 @@ public class GlobalExceptionHandler {
 		return new ResultResponse(CodeMessage.ACCOUNT_ALREADY_EXIST);
 	}
 
-	@ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+	@ExceptionHandler(IncorrectCredentialsException.class)
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	public ResultResponse handleHttpMediaTypeNotAcceptableException(HttpMediaTypeNotAcceptableException e){
+	public ResultResponse handleIncorrectCredentialsException(IncorrectCredentialsException e){
 		e.printStackTrace();
-		return new ResultResponse(CodeMessage.ACCOUNT_ALREADY_EXIST);
+		System.out.println("-----------------------------------------------------------");
+		System.out.println("登录失败，密码错误");
+		System.out.println("-----------------------------------------------------------");
+		return new ResultResponse(CodeMessage.INCORRECT_PASSWORD);
 	}
 }

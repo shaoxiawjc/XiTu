@@ -11,6 +11,7 @@ public enum CodeMessage {
 	SUCCESS_LOGIN(200,"登录成功"),
 	SUCCESS_REGISTER(201,"注册成功"),
 	UNKNOWN_ACCOUNT(401,"登录失败，用户名不存在"),
+	INCORRECT_PASSWORD(402,"登录失败，密码错误"),
 	ACCOUNT_ALREADY_EXIST(400,"用户已经存在");
 
 

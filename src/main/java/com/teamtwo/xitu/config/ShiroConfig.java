@@ -1,6 +1,8 @@
 package com.teamtwo.xitu.config;
 
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
+import org.apache.shiro.spring.web.config.ShiroWebConfiguration;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -25,15 +27,27 @@ public class ShiroConfig {
 	// 第二步：DefaultWebSecurityManager
 	@Bean(name = "securityManager")
 	public DefaultWebSecurityManager securityManager(@Qualifier("userRealm")
-																UserRealm userRealm){
+																UserRealm userRealm,
+													 @Qualifier("hashedCredentialsMatcher")
+													  HashedCredentialsMatcher hashedCredentialsMatcher){
 		DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
 		// 关联userRealm
 		securityManager.setRealm(userRealm);
 		return securityManager;
+
 	}
 	// 第一步：创建realm对象
 	@Bean
 	public UserRealm userRealm(){
 		return new UserRealm();
 	}
+
+	@Bean
+	public HashedCredentialsMatcher hashedCredentialsMatcher() {
+		HashedCredentialsMatcher credentialsMatcher = new HashedCredentialsMatcher();
+		credentialsMatcher.setHashAlgorithmName("SHA-256");
+		credentialsMatcher.setHashIterations(5);
+		return credentialsMatcher;
+	}
+
 }

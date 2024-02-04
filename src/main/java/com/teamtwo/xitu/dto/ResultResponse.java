@@ -12,22 +12,40 @@ import java.io.Serializable;
 public class ResultResponse<T> implements Serializable {
 	private Integer code;
 	private String message;
-	private T t;
+	private T data;
 
-	public ResultResponse(CodeMessage codeMessage) {
+	public ResultResponse(CodeMessage codeMessage){
 		this.code = codeMessage.getCode();
 		this.message = codeMessage.getMessage();
 	}
 
-	public ResultResponse(CodeMessage codeMessage, T t){
+	public ResultResponse(CodeMessage codeMessage,T data){
 		this.code = codeMessage.getCode();
 		this.message = codeMessage.getMessage();
-		this.t = t;
+		this.data = data;
 	}
 
-	public ResultResponse(Integer code, String message, T t) {
+	public Integer getCode() {
+		return code;
+	}
+
+	public void setCode(Integer code) {
 		this.code = code;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public void setMessage(String message) {
 		this.message = message;
-		this.t = t;
+	}
+
+	public T getData() {
+		return data;
+	}
+
+	public void setData(T data) {
+		this.data = data;
 	}
 }

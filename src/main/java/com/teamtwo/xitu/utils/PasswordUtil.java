@@ -17,13 +17,16 @@ public class PasswordUtil {
 	public static String generateRandomSalt() {
 		return UUID.randomUUID().toString();
 	}
-	public static String hashPassword(String password,String salt){
-		ByteSource saltSource = ByteSource.Util.bytes(salt);
-		return new SimpleHash("SHA-256",password,saltSource,5).toHex();
+	public static String hashPassword(String password,ByteSource salt){
+		return new SimpleHash("SHA-256",password,salt,1024).toString();
 	}
 
-	public static boolean verifyPassword(String inputPassword, String salt, String storedPassword) {
+
+
+	public static boolean verifyPassword(String inputPassword, ByteSource salt, String storedPassword) {
+		System.out.println(inputPassword+" "+salt.toString());
 		String hashedInputPassword = hashPassword(inputPassword, salt);
 		return hashedInputPassword.equals(storedPassword);
 	}
+
 }
