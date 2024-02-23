@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamtwo.xitu.mapper.LikedAssociationMapper">
+    <insert id="registerUserUpdate" parameterType="java.lang.Long">
+        insert into liked_association_user_blog (user_id,blog_id,is_liked,created_time,updated_time,version,deleted)
+        select #{userId},b.id,0,CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP(),1,0
+        from blog b
+    </insert>
+
+    <insert id="addBlogUpdate" parameterType="java.lang.Long">
+        insert into liked_association_user_blog  (user_id,blog_id,is_liked,created_time,updated_time,version,deleted)
+        select u.id,#{blogId},0,CURRENT_TIMESTAMP(),CURRENT_TIMESTAMP(),1,0
+        from `user` u
+    </insert>
+</mapper>

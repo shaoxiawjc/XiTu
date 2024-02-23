@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamtwo.xitu.mapper.BlogMapper">
+    <resultMap id="blogDTO" type="com.teamtwo.xitu.dto.BlogDTO">
+        <result column="id" property="id"/>
+        <result column="author" property="author"/>
+        <result column="title" property="title"/>
+        <result column="click_num" property="clickNum"/>
+        <result column="content" property="content"/>
+        <result column="is_liked" property="isLiked"/>
+        <result column="liked" property="liked"/>
+        <result column="created_time" property="createTime"/>
+        <result column="fComment_num" property="fCommentNum"/>
+        <collection property="imageDTOS" ofType="com.teamtwo.xitu.dto.ImageDTO" resultMap="imagesDTO"/>
+    </resultMap>
+    
+    <resultMap id="imagesDTO" type="com.teamtwo.xitu.dto.ImageDTO">
+        <result property="id" column="images_id"/>
+        <result property="url" column="images_url"/>
+        <result property="name" column="images_name"/>
+    </resultMap>
+
+    <resultMap id="ClickRankDTOResult" type="com.teamtwo.xitu.dto.BlogClickDTO">
+        <result column="id" property="blogId"/>
+        <result column="title" property="title"/>
+        <result column="click_num" property="clickNum"/>
+    </resultMap>
+
+    <select id="selectBlogByBlogId" resultMap="blogDTO">
+        select b.id as id,
+               b.title as title,
+               b.click_num as click_num,
+               u.username as author,
+               b.content as content,
+               b.created_time as created_time,
+               i.url as images_url,
+               i.name as images_name,
+               i.id as images_id,
+               l.is_liked as is_liked,
+               COUNT(distinct case when l.is_liked = 0 then null else l.user_id end) as liked,
+               COUNT(fc.id) as fComment_num
+        from
+            blog b
+                left join
+            liked_association_user_blog l on b.id = l.blog_id
+                left join
+            `user` u on u.id = b.user_id
+                left join
+            images i on i.blog_id = b.id
+                left join
+            `f_comment` fc on fc.blog_id = b.id
+        where
+            (#{userId} = -1 or l.user_id = #{userId}) and b.id = #{id}
+        group by
+            b.id, b.title, b.content, b.created_time, l.is_liked ,i.id, i.url,i.name
+    </select>
+
+    <select id="queryCurrent" resultMap="blogDTO">
+        select b.id as id,
+               b.title as title,
+               b.click_num as click_num,
+               u.username as author,
+               b.content as content,
+               l.is_liked as is_liked,
+               b.created_time as created_time,
+               i.url as images_url,
+               i.name as images_name,
+               i.id as images_id,
+               COUNT(distinct case when l.is_liked = 0 then null else l.user_id end) as liked,
+               COUNT(fc.id) as fComment_num
+        from
+            blog b
+        left join
+            liked_association_user_blog l on b.id = l.blog_id
+        left join
+            `user` u on u.id = b.user_id
+        left join
+            images i on i.blog_id = b.id
+        left join
+            `f_comment` fc on fc.blog_id = b.id
+        where
+            (#{userId} = -1 or l.user_id = #{userId})
+        group by
+            b.id, b.title, b.content, b.created_time, l.is_liked ,i.id, i.url,i.name
+        order by b.created_time desc
+    </select>
+
+    <select id="selectImagesURLAndName" resultType="com.teamtwo.xitu.dto.ImageDTO">
+        select url,name
+        from `images` i
+        where b.id = i.blog_id
+    </select>
+    
+    <select id="myBlogs" resultMap="blogDTO">
+        select b.id as id,
+               b.title as title,
+               b.click_num as click_num,
+               u.username as author,
+               b.content as content,
+               b.created_time as created_time,
+               i.url as images_url,
+               i.name as images_name,
+               l.is_liked as is_liked,
+               i.id as images_id,
+               COUNT(distinct case when l.is_liked = 0 then null else l.user_id end) as liked,
+               COUNT(fc.id) as fComment_num
+        from
+            blog b
+                left join
+            liked_association_user_blog l on b.id = l.blog_id
+                left join
+            images i on i.blog_id = b.id
+                left join
+            `user` u on u.id = b.user_id
+                left join
+            `f_comment` fc on fc.blog_id = b.id
+        where
+             b.user_id = #{user_id} AND l.user_id = u.id
+        group by
+            b.id, b.title, b.click_num, u.username, b.content, b.created_time, i.url, i.name, l.is_liked, i.id
+        order by b.created_time desc
+    </select>
+
+    <select id="myLike" resultMap="blogDTO">
+        select b.id as id,
+               u.username as author,
+               b.title as title,
+               b.click_num as click_num,
+               b.content as content,
+               b.created_time as created_time,
+               i.url as images_url,
+               i.name as images_name,
+               i.id as images_id,
+               1 as is_liked,
+               COUNT(distinct case when l.is_liked = 0 then null else l.user_id end) as liked,
+               COUNT(fc.id) as fComment_num
+        from
+            blog b
+                left join
+            liked_association_user_blog l on b.id = l.blog_id
+                left join
+            `user` u on u.id = b.user_id
+                left join
+            images i on i.blog_id = b.id
+                left join
+            `f_comment` fc on fc.blog_id = b.id
+        where
+            l.user_id = #{userId} and l.is_liked = 1
+        group by
+            b.id, b.title, b.content, b.created_time,i.id, i.url,i.name
+        order by b.created_time desc
+    </select>
+
+    <select id="selectClick" resultMap="ClickRankDTOResult">
+        select
+            b.id as id,
+            b.title as title,
+            b.click_num as click_num
+        from `blog` b
+    </select>
+
+    <resultMap id="LikedRank" type="com.teamtwo.xitu.dto.LikedRank">
+        <result property="blogId" column="blog_id"/>
+        <result property="title" column="title"/>
+        <result property="liked" column="liked"/>
+    </resultMap>
+
+    <select id="selectLikedNum" resultMap="LikedRank">
+        select
+            b.id as blog_id,
+            b.title as title,
+            COUNT(distinct case when l.is_liked = 0 then null else l.user_id end) as liked
+        from
+            `blog` b
+        left join
+            `liked_association_user_blog` l on b.id = l.blog_id
+        group by
+            b.id,b.title
+    </select>
+
+    <select id="selectAllBlogId"  resultType="java.lang.Long">
+        select id from `blog`
+    </select>
+</mapper>

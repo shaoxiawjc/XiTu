@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.teamtwo.xitu.mapper.FCommentMapper">
+
+    <resultMap id="fCommentDTO" type="com.teamtwo.xitu.dto.FCommentDTO">
+        <result column="id" property="id"/>
+        <result column="content" property="content"/>
+        <result column="author" property="author"/>
+        <result column="sComment_num" property="sCommentNum"/>
+        <result column="created_time" property="createdTime"/>
+    </resultMap>
+
+    <select id="fComment" resultMap="fCommentDTO">
+        select f.id as id,
+               f.content as content,
+               f.created_time as created_time,
+               u.username as author,
+               COUNT(sc.id) as sComment_num
+        from `f_comment` f
+        left join `user` u on f.user_id = u.id
+        left join  `s_comment` sc on sc.f_comment_id = f.id
+        where f.blog_id = #{blogId}
+        group by f.id, f.content, f.id, f.created_time, u.username
+        order by f.created_time desc
+    </select>
+
+</mapper>
