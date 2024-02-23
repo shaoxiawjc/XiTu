@@ -24,8 +24,8 @@ public class FileUtils {
 	// 地域节点
 	public static final String endPoint = "https://oss-cn-nanjing.aliyuncs.com";
 	// 账号密码
-	private static final String ALIYUN_ACCESS_KEY_ID = "LTAI5t5mmLPjmdc9pGDScnW4";
-	private static final String ALIYUN_ACCESS_KEY_SECRET = "ak4jRL3M93oGAahweCAU78Uq4ezx2d";
+	private static final String ALIYUN_ACCESS_KEY_ID = "";
+	private static final String ALIYUN_ACCESS_KEY_SECRET = "";
 	/**
 	 * @param file 文件
 	 * @param folderName 对应的在oss里的文件夹的名字
