@@ -35,14 +35,23 @@ public class BlogServiceImpl implements BlogService {
 		Long userId = -1L;
 		if (!(token == null || token.equals(""))){
 			userId = Long.parseLong(StpUtil.getExtra(token,"userId").toString());
+			System.out.println(userId);
 		}
+		String userIdString = userId.toString();
+		List<BlogDTO> blogDTOS = blogMapper.queryCurrent(userIdString);
 
-		List<BlogDTO> blogDTOS = blogMapper.queryCurrent(userId);
 		for (BlogDTO blogDTO:blogDTOS){
-			Integer isLiked =(Integer) redisCache.get("liked:userId" + userId+ ":blogId:" + blogDTO.getId().toString());
-			System.out.println(isLiked);
+			Integer isLiked =(Integer) redisCache.get("liked:userId:" + userId+ ":blogId:" + blogDTO.getId().toString());
+			System.out.println("liked:userId:" + userId+ ":blogId:" + blogDTO.getId().toString()+isLiked);
 			blogDTO.setIsLiked(isLiked);
 		}
+
+		for (BlogDTO blogDTO:blogDTOS){
+			BlogClickDTO blogClickDTO = (BlogClickDTO) redisCache.get("blog:click:" + blogDTO.getId());
+			System.out.println(blogClickDTO);
+			blogDTO.setClickNum(blogClickDTO.getClickNum());
+		}
+
 		return new ResultResponse<>(CodeMessage.SUCCESS,blogDTOS);
 	}
 
@@ -90,11 +99,11 @@ public class BlogServiceImpl implements BlogService {
 			redisCache.set(key,o);
 		}else {
 			// 如果没有获取到，就重新创建一个
-			BlogClickDTO blogClickDTO = new BlogClickDTO();
-			blogClickDTO.setBlogId(blogId);
-			blogClickDTO.setTitle(blogDTO.getTitle());
-			blogClickDTO.setClickNum(1L);
-			redisCache.set(key,blogClickDTO);
+			o = new BlogClickDTO();
+			o.setBlogId(blogId);
+			o.setTitle(blogDTO.getTitle());
+			o.setClickNum(1L);
+			redisCache.set(key,o);
 		}
 
 		blogDTO.setClickNum(o.getClickNum());

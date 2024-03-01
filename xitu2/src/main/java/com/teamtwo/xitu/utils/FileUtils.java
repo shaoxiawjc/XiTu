@@ -4,6 +4,7 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.CredentialsProviderFactory;
 import com.aliyun.oss.common.auth.EnvironmentVariableCredentialsProvider;
+import com.aliyun.oss.model.CannedAccessControlList;
 import com.aliyuncs.exceptions.ClientException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +21,7 @@ import java.util.UUID;
  **/
 public class FileUtils {
 	// 阿里域名
-	public static final String ALI_DOMAIN = "https://xitu.oss-cn-guangzhou.aliyuncs.com/";
+	public static final String ALI_DOMAIN = "https://xitu.oss-cn-nanjing.aliyuncs.com/";
 	// 地域节点
 	public static final String endPoint = "https://oss-cn-nanjing.aliyuncs.com";
 	// 账号密码
@@ -32,7 +33,7 @@ public class FileUtils {
 	 * */
 	public static String uploadFile(MultipartFile file, String folderName) throws IOException, ClientException {
 		// 从环境变量获取key和secret
-//		EnvironmentVariableCredentialsProvider credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
+//		EnvironmentVariableCredentialsProvi	der credentialsProvider = CredentialsProviderFactory.newEnvironmentVariableCredentialsProvider();
 //		System.out.println("Access Key ID: " + credentialsProvider.getCredentials().getAccessKeyId());
 //		System.out.println("Secret Access Key: " + credentialsProvider.getCredentials().getSecretAccessKey());
 
@@ -73,6 +74,10 @@ public class FileUtils {
 					objectKey, // 文件名
 					file.getInputStream()
 			);
+			build.setObjectAcl(
+					"xitu",
+					objectKey,
+					CannedAccessControlList.PublicRead);
 		}finally {
 			if (build != null){
 				build.shutdown();

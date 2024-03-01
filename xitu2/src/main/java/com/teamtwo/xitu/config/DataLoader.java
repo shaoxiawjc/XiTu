@@ -47,7 +47,7 @@ public class DataLoader implements CommandLineRunner {
 		QueryWrapper<LikedAssociation> wrapper = new QueryWrapper<>();
 		List<LikedAssociation> likedAssociations = likedAssociationMapper.selectList(wrapper);
 		for (LikedAssociation likedAssociation:likedAssociations) {
-			redisCache.set("liked:userId"+likedAssociation.getUserId().toString()+":blogId:"+likedAssociation.getBlogId().toString(),
+			redisCache.set("liked:userId:"+likedAssociation.getUserId().toString()+":blogId:"+likedAssociation.getBlogId().toString(),
 					likedAssociation.getIsLiked());
 		}
 		List<LikedRank> likedRanks = blogMapper.selectLikedNum();

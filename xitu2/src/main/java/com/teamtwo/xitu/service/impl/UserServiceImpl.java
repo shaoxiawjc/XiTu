@@ -239,7 +239,7 @@ public class UserServiceImpl implements UserService {
 		fComment.setContent(content);
 		fComment.setBlogId(Long.parseLong(blogId));
 		fCommentMapper.insert(fComment);
-		FCommentDTO fCommentDTO = new FCommentDTO(fComment.getId(), content, username, 0L,fComment.getCreatedTime());
+		FCommentDTO fCommentDTO = new FCommentDTO(fComment.getId().toString(), content, username,null, 0L,fComment.getCreatedTime(),null);
 		return new ResultResponse<>(CodeMessage.SUCCESS,fCommentDTO);
 	}
 
@@ -297,7 +297,7 @@ public class UserServiceImpl implements UserService {
 		sComment.setFCommentId(Long.parseLong(fCommentId));
 		sComment.setContent(content);
 		sCommentMapper.insert(sComment);
-		SCommentDTO sCommentDTO = new SCommentDTO(sComment.getId(), content, username, sComment.getCreatedTime());
+		SCommentDTO sCommentDTO = new SCommentDTO(sComment.getId().toString(), content, username, null,sComment.getCreatedTime());
 		return new ResultResponse<>(CodeMessage.SUCCESS,sCommentDTO);
 	}
 

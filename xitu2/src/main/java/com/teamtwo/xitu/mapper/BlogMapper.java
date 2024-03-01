@@ -21,7 +21,7 @@ import java.util.List;
 @Repository
 @Mapper
 public interface BlogMapper extends BaseMapper<Blog> {
-	List<BlogDTO> queryCurrent(@Param("userId") Long userId);
+	List<BlogDTO> queryCurrent(@Param("userId") String userId);
 
 	List<BlogDTO> myBlogs(Long userId);
 

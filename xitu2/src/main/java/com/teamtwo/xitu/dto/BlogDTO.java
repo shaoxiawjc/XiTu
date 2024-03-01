@@ -20,7 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BlogDTO implements Serializable {
-	private Long id;
+	private String id;
 	private String author;
 	private String title;
 	private String content;

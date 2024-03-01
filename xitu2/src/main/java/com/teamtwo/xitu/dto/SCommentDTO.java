@@ -18,8 +18,9 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SCommentDTO implements Serializable {
-	private Long id;
+	private String id;
 	private String content;
 	private String author;
+	private String image;
 	private Timestamp createdTime;
 }

@@ -54,22 +54,22 @@
         where
             (#{userId} = -1 or l.user_id = #{userId}) and b.id = #{id}
         group by
-            b.id, b.title, b.content, b.created_time, l.is_liked ,i.id, i.url,i.name
+            b.id, b.title, b.click_num, u.username, b.content, b.created_time, i.url, i.name, i.id, l.is_liked
     </select>
 
     <select id="queryCurrent" resultMap="blogDTO">
-        select b.id as id,
+        select distinct b.id as id,
                b.title as title,
                b.click_num as click_num,
                u.username as author,
                b.content as content,
-               l.is_liked as is_liked,
+               (case when #{userId} = -1 then 0 else l.is_liked end) as is_liked,
                b.created_time as created_time,
                i.url as images_url,
                i.name as images_name,
                i.id as images_id,
-               COUNT(distinct case when l.is_liked = 0 then null else l.user_id end) as liked,
-               COUNT(fc.id) as fComment_num
+               COUNT(distinct case when l.is_liked = 0 then null else 1 end) as liked,
+               COUNT(distinct fc.id) as fComment_num
         from
             blog b
         left join
@@ -83,7 +83,7 @@
         where
             (#{userId} = -1 or l.user_id = #{userId})
         group by
-            b.id, b.title, b.content, b.created_time, l.is_liked ,i.id, i.url,i.name
+            b.id
         order by b.created_time desc
     </select>
 
@@ -149,7 +149,7 @@
         where
             l.user_id = #{userId} and l.is_liked = 1
         group by
-            b.id, b.title, b.content, b.created_time,i.id, i.url,i.name
+            b.id, u.username, b.title, b.click_num, b.content, b.created_time, i.url, i.name, i.id, 1
         order by b.created_time desc
     </select>
 

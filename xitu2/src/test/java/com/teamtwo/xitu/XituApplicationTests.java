@@ -20,6 +20,5 @@ class XituApplicationTests {
 
 	@Test
 	void contextLoads() {
-
 	}
 }

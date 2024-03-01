@@ -8,8 +8,31 @@
         <result column="id" property="id"/>
         <result column="content" property="content"/>
         <result column="author" property="author"/>
+        <result column="image" property="image"/>
         <result column="sComment_num" property="sCommentNum"/>
         <result column="created_time" property="createdTime"/>
+        <collection property="sComments" column="{fCommentId=id}" ofType="com.teamtwo.xitu.dto.SCommentDTO" select="selectSComments">
+        </collection>
+    </resultMap>
+
+    <select id="selectSComments" resultMap="sComments">
+        select
+        sc.id as sc_id,
+        sc.content as sc_content,
+        u.username as sc_author,
+        u.image as sc_image,
+        sc.created_time as sc_createdTime
+        from `s_comment` sc
+        left join `user` u on sc.user_id = u.id
+        where sc.f_comment_id = #{fCommentId}
+    </select>
+
+    <resultMap id="sComments" type="com.teamtwo.xitu.dto.SCommentDTO">
+        <result column="sc_id" property="id"/>
+        <result column="sc_content" property="content"/>
+        <result column="sc_author" property="author"/>
+        <result column="sc_image" property="image"/>
+        <result column="sc_createdTime" property="createdTime"/>
     </resultMap>
 
     <select id="fComment" resultMap="fCommentDTO">
@@ -17,6 +40,7 @@
                f.content as content,
                f.created_time as created_time,
                u.username as author,
+               u.image as image,
                COUNT(sc.id) as sComment_num
         from `f_comment` f
         left join `user` u on f.user_id = u.id
