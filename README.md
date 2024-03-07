@@ -15,3 +15,7 @@
 * MyBatis-plus
 * Redis
 * 阿里云oss对象存储
+
+地址：8.130.119.35:8081
+
+[接口文档](https://apifox.com/apidoc/shared-26825bc8-d709-4f1f-96b9-95d8cf209d3d)
